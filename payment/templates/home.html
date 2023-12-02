@@ -38,9 +38,14 @@
             <div id="payment-form" class="col-12 col-lg-6 mx-auto">
               <h3 class="mb-3">Billing address</h3>
               <!-- Error messages in this element -->
+              
               <div id="card-errors" class="a" role="alert"></div>
               <form>
                 <div class="row g-3">
+                  {% for product in products %}
+                  <input type="hidden" name="items[{{ loop.counter0 }}][product]" value="{{ product.id }}">
+                  <input type="number" name="items[{{ loop.counter0 }}][qty]" min="1" value="1">
+                {% endfor %}
                   <div class="col-sm-7">
                     <label for="firstName" class="form-label">Customer Name</label>
                     <input type="text" class="form-control" id="custName" placeholder="" required>
@@ -124,9 +129,9 @@
                   <!-- Payment elements will appear here -->
                 </div>
                 <hr class="my-4">
-                <button id="submit" class="btn btn-primary w-100 fw-bold">Pay</button>
+                <!-- <button id="submit" class="btn btn-primary w-100 fw-bold">Pay</button> -->
 
-                <!-- <button id="submit" class="btn btn-primary w-100 fw-bold" data-secret="{{ client_secret }}">Pay</button> -->
+                <button id="submit" class="btn btn-primary w-100 fw-bold" data-secret="{{ client_secret }}">Pay</button>
               </form>
             </div>
           </div>
