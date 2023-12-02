@@ -198,9 +198,13 @@ def add(request):
 
 
 
-def payment_confirmation(data):
-    # Order.objects.filter(order_key=data).update(is_delivered=True)
-    pass
+# def payment_confirmation(data):
+#     pass
+#     return render(request, 'order_placed.html', {})
+def payment_confirmation(request):
+    # Your code here
+    return render(request, 'order_placed.html', {})
+
 
 
 def user_orders(request):

@@ -9,7 +9,7 @@
   var CSRF_TOKEN = '{{ csrf_token }}';
 </script>
 
-<script src="https://js.stripe.com/v3/"></script>
+<!-- <script src="https://js.stripe.com/v3/"></script> -->
 
 
 <style>
@@ -40,7 +40,9 @@
               <!-- Error messages in this element -->
               
               <div id="card-errors" class="a" role="alert"></div>
-              <form>
+              <form  action="{% url 'payment_confirmation' %}"  method="POST" >
+                {% csrf_token %}
+
                 <div class="row g-3">
                   {% for product in products %}
                   <input type="hidden" name="items[{{ loop.counter0 }}][product]" value="{{ product.id }}">
@@ -124,9 +126,24 @@
                 </div>
                 <hr class="my-4">
                 <h4 class="mb-3">Payment</h4>
-                <label for="card-element">Credit or debit card</label>
-                <div id="card-element" class="form-control form-control-payment">
-                  <!-- Payment elements will appear here -->
+                <!-- <label for="card-element">Credit or debit card</label> -->
+                <!-- <div id="card-element" class="form-control form-control-payment">
+                    Payment elements will appear here  stripe block 
+                </div> -->
+
+                <div class="col-md-5">
+                  <label for="firstName" class="form-label">Credit or Debit Card</label>
+                  <input type="text" class="form-control" id="atmCard" placeholder="1111-2222-3333-4444" required>
+                  <div class="invalid-feedback">
+                    Valid Card is required.
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <label for="Postcode" class="form-label">CVV</label>
+                  <input type="text" class="form-control" id="CVV" placeholder="123" required>
+                  <div class="invalid-feedback">
+                    Zip code required.
+                  </div>
                 </div>
                 <hr class="my-4">
                 <!-- <button id="submit" class="btn btn-primary w-100 fw-bold">Pay</button> -->

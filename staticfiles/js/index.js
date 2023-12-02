@@ -30,6 +30,31 @@ card.on('change', function (event) {
 
 var form = document.getElementById('payment-form');
 
+async function confirmPaymentIntent() {
+  const paymentIntentId = 'pi_3OIpEGH7l1aq9jNs0tCqrpTN';
+  console.log(paymentIntent)
+
+  try {
+    // Check if the payment intent exists before attempting to confirm it
+    const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+
+    if (!paymentIntent) {
+      // Payment intent not found, redirect to error page
+      window.location.href = '/error.html';
+      return;
+    }
+
+    // Payment intent exists, attempt to confirm it
+    const confirmedPaymentIntent = await stripe.paymentIntents.confirm(paymentIntentId);
+
+    // Handle successful payment intent confirmation
+  } catch (error) {
+    // Handle other errors
+    console.error(error);
+  }
+}
+
+
 form.addEventListener('submit', function (ev) {
     ev.preventDefault();
 
@@ -38,24 +63,7 @@ form.addEventListener('submit', function (ev) {
     var custAdd2 = document.getElementById("custAdd2").value;
     var postCode = document.getElementById("postCode").value;
 
-    const clientSecret = '{{ payment_intent.client_secret }}';
-    console.log(clientSecret);
-
-    try {
-      stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card: {
-            token: '{{ token }}'
-          }
-        }
-      }).then(function(result) {
-        // Payment confirmed
-      }).catch(function(error) {
-        // Payment failed
-      });
-    } catch (error) {
-      console.error('Error confirming payment:', error);
-    }
+    
     
 
       
