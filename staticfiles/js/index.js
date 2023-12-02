@@ -112,6 +112,4 @@ form.addEventListener('submit', function (ev) {
 //         error: function (xhr, errmsg, err) { },
 //     });
 
-
-
-// });
+ });
