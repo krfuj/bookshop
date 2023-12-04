@@ -55,4 +55,6 @@ urlpatterns = [
         TemplateView.as_view(template_name="delete_confirm.html"),
         name="delete_confirmation",
     ),
+    path('activate/<uidb64>/<token>/', views.account_activate, name='activate'),
+
 ]

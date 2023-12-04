@@ -1,10 +1,13 @@
+from imaplib import _Authenticator
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
-from django.utils.encoding import force_bytes, force_text
+from django.utils.encoding import force_bytes
+
+#
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from orders.views import user_orders
 
@@ -18,7 +21,7 @@ def login(request):
         username = request.POST['username']
         password = request.POST['password']
 
-        user = authenticate(request, username=username, password=password)
+        user = _Authenticator(request, username=username, password=password)
         if user is None:
             login(request, user)
             return redirect('dashboard')
@@ -82,22 +85,50 @@ def account_register(request):
                 },
             )
             user.email_user(subject=subject, message=message)
-            return redirect("login")
+            #return redirect("login")
+            return render(request, "registration/account_activation_email.html")
     else:
         registerForm = RegistrationForm()
     return render(request, "registration/signup.html", {"form": registerForm})
 
+#########################O.G###################################################
+
+# def account_activate(request, uidb64, token):
+#     try:
+#         uid = force_text(urlsafe_base64_decode(uidb64))
+#         user = UserBase.objects.get(pk=uid)
+#     except (TypeError, ValueError, OverflowError, user.DoesNotExist):
+#         user = None
+#     if user is not None and account_activation_token.check_token(user, token):
+#         user.is_active = True
+#         user.save()
+#         login(request, user)
+#         return redirect("dashboard")
+#     else:
+#         return render(request, "registration/activation_invalid.html")
+
+#####################END OG #######################################################################
 
 def account_activate(request, uidb64, token):
     try:
-        uid = force_text(urlsafe_base64_decode(uidb64))
+        # uid = force_text(urlsafe_base64_decode(uidb64))
+        uid = force_bytes(urlsafe_base64_decode(uidb64))
         user = UserBase.objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, user.DoesNotExist):
+    except (TypeError, ValueError, OverflowError, UserBase.DoesNotExist):
         user = None
-    if user is not None and account_activation_token.check_token(user, token):
-        user.is_active = True
-        user.save()
-        login(request, user)
-        return redirect("dashboard")
+
+    if user is not None:
+        if account_activation_token.check_token(user, token):
+            # Activate the user
+            user.is_active = True
+            user.save()
+            login(request, user)
+            # Redirect to dashboard
+            return redirect("dashboard")
+        else:
+            # The token is invalid
+            return render(request, "registration/activation_invalid.html")
     else:
+        # The user with the given UID does not exist
         return render(request, "registration/activation_invalid.html")
+

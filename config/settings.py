@@ -94,7 +94,9 @@ DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": os.path
 #     }
 # }
 
+#postgres://swapandgrab_user:EBVK2hFfscWYNWaMNQoVyZt6iHi6M1Pn@dpg-clmuce4jtl8s73a9lilg-a.oregon-postgres.render.com/swapandgrab
 
+DATABASES["default"] = dj_database_url.parse("postgres://swapandgrab_user:EBVK2hFfscWYNWaMNQoVyZt6iHi6M1Pn@dpg-clmuce4jtl8s73a9lilg-a.oregon-postgres.render.com/swapandgrab")
 
 
 AUTH_PASSWORD_VALIDATORS = [
